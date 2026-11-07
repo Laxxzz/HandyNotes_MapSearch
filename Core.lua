@@ -77,13 +77,14 @@ end)
 
 -- ------------------------------------------------------------------ slash command
 local HELP = {
-    "/mapsearch - open the options",
+    "/mapsearch / ms - open the options",
     "/mapsearch results <1-20> - how many matches the list shows",
     "/mapsearch rebuild - re-read every map's pins",
     "/mapsearch status - index size and progress",
 }
 
 SLASH_HANDYNOTES_MAPSEARCH1 = "/mapsearch"
+SLASH_HANDYNOTES_MAPSEARCH2 = "/ms"
 SlashCmdList.HANDYNOTES_MAPSEARCH = function(msg)
     local cmd, arg = strtrim(msg or ""):lower():match("^(%S*)%s*(.-)$")
     if cmd == "" then

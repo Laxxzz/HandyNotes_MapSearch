@@ -17,6 +17,7 @@ WoW: Forever, and runs on retail (12.1.5) too; one download serves both.
 ## Settings
 
 `/mapsearch` opens the options (also under Options > AddOns > HandyNotes - MapSearch).
+`/ms` is a short alias for `/mapsearch` in every command below.
 
 | Command | Effect |
 |---|---|
