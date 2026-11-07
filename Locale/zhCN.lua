@@ -11,6 +11,7 @@ ns.Locale.Register("zhCN", {
     ["The list shows %d results."] = { other = "列表显示%d个结果。" },
     ["Use /mapsearch results <%d-%d>."] = "请使用 /mapsearch results <%d-%d>。",
     ["Rebuilding the index."] = "正在重建索引。",
+    ["In combat: the settings will open when combat ends."] = "战斗中：战斗结束后将打开设置。",
     ["open the options"] = "打开设置",
     ["how many matches the list shows"] = "列表显示的结果数量",
     ["re-read every map's pins"] = "重新读取所有地图的标记",

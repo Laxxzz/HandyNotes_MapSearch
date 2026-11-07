@@ -121,3 +121,26 @@ end
 function HandyNotes_MapSearch_OnCompartmentClick()
     ns.OpenOptions()
 end
+
+-- Settings.OpenToCategory reaches the protected C_SettingsUtil.OpenSettingsPanel,
+-- so from addon code it is blocked in combat; open on combat end instead.
+local pendingOpen = false
+local origOpen = ns.OpenOptions
+function ns.OpenOptions()
+    if InCombatLockdown() then
+        if not pendingOpen then
+            pendingOpen = true
+            ns.Print(T["In combat: the settings will open when combat ends."])
+        end
+        return
+    end
+    origOpen()
+end
+local combatFrame = CreateFrame("Frame")
+combatFrame:RegisterEvent("PLAYER_REGEN_ENABLED")
+combatFrame:SetScript("OnEvent", function()
+    if pendingOpen then
+        pendingOpen = false
+        origOpen()
+    end
+end)

@@ -16,6 +16,7 @@ ns.Locale.Register("ruRU", {
     },
     ["Use /mapsearch results <%d-%d>."] = "Используйте /mapsearch results <%d-%d>.",
     ["Rebuilding the index."] = "Индекс перестраивается.",
+    ["In combat: the settings will open when combat ends."] = "В бою: настройки откроются после окончания боя.",
     ["open the options"] = "открыть настройки",
     ["how many matches the list shows"] = "сколько результатов показывает список",
     ["re-read every map's pins"] = "заново прочитать метки всех карт",

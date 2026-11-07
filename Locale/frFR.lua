@@ -11,6 +11,7 @@ ns.Locale.Register("frFR", {
     ["The list shows %d results."] = { one = "La liste affiche %d résultat.", other = "La liste affiche %d résultats." },
     ["Use /mapsearch results <%d-%d>."] = "Utilisez /mapsearch results <%d-%d>.",
     ["Rebuilding the index."] = "Reconstruction de l'index.",
+    ["In combat: the settings will open when combat ends."] = "En combat : les options s'ouvriront à la fin du combat.",
     ["open the options"] = "ouvrir les options",
     ["how many matches the list shows"] = "nombre de résultats affichés dans la liste",
     ["re-read every map's pins"] = "relire les marqueurs de toutes les cartes",

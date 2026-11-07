@@ -11,6 +11,7 @@ ns.Locale.Register("koKR", {
     ["The list shows %d results."] = { other = "목록에 결과를 %d개 표시합니다." },
     ["Use /mapsearch results <%d-%d>."] = "/mapsearch results <%d-%d> 명령어를 사용하세요.",
     ["Rebuilding the index."] = "색인을 다시 만듭니다.",
+    ["In combat: the settings will open when combat ends."] = "전투 중: 전투가 끝나면 설정이 열립니다.",
     ["open the options"] = "설정 열기",
     ["how many matches the list shows"] = "목록에 표시할 결과 수",
     ["re-read every map's pins"] = "모든 지도의 표시를 다시 읽기",
