@@ -1,5 +1,5 @@
 -- In-game tests for WAAR Probe: /waar test HandyNotes_MapSearch
--- Listed in the TOC between #@do-not-package@ markers, so release builds omit it.
+-- Not in the shipped TOC (a missing file there errors on load). Test builds add 	ests\InGame.lua to the TOC.
 
 local ADDON_NAME, ns = ...
 

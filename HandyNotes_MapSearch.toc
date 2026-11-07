@@ -35,6 +35,3 @@ Index.lua
 Search.lua
 Pins.xml
 UI.lua
-#@do-not-package@
-tests\InGame.lua
-#@end-do-not-package@
