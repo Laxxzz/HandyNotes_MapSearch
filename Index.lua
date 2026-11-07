@@ -93,16 +93,19 @@ local function ScanLabel(entry)
     end
     if type(handler.OnEnter) ~= "function" then return nil end
 
+    -- The tooltip is hidden (CanScanNow) and emptied first, so any line now came from this
+    -- plugin, whatever it anchored to: WoW Forever's plugin owns it by WorldMapFrame.ScrollContainer.
     local owner = ScanOwner()
     owner.pluginName, owner.coord, owner.uiMapID = entry.plugin, entry.coord, entry.mapID
+    GameTooltip:ClearLines()
     local label
-    if pcall(handler.OnEnter, owner, entry.mapID, entry.coord) and GameTooltip:IsOwned(owner) then
+    if pcall(handler.OnEnter, owner, entry.mapID, entry.coord) and GameTooltip:NumLines() > 0 then
         label = CleanText(GameTooltipTextLeft1:GetText())
     end
     if type(handler.OnLeave) == "function" then
         pcall(handler.OnLeave, owner, entry.mapID, entry.coord)
     end
-    if GameTooltip:IsOwned(owner) then GameTooltip:Hide() end
+    GameTooltip:Hide()
     return label
 end
 
@@ -116,6 +119,22 @@ local function CollectNodes(handler, mapID, out)
     local iter, state, value = handler:GetNodes2(mapID, false)
     for coord, nodeMapID, icon in iter, state, value do
         out[#out + 1] = { coord, nodeMapID or mapID, icon }
+    end
+end
+
+-- WoW: Forever has no API reference, so both game sources are optional and read inside pcall.
+local function CollectGamePins(mapID, otherFaction, out)
+    local GetTaxiNodes = C_TaxiMap and C_TaxiMap.GetTaxiNodesForMap
+    for _, node in ipairs(GetTaxiNodes and GetTaxiNodes(mapID) or {}) do
+        if node.faction ~= otherFaction then
+            local x, y = node.position:GetXY()
+            out[#out + 1] = { "taxi:" .. node.nodeID, x, y, node.atlasName, node.name, "Flight point" }
+        end
+    end
+    local GetEntrances = C_EncounterJournal and C_EncounterJournal.GetDungeonEntrancesForMap
+    for _, dungeon in ipairs(GetEntrances and GetEntrances(mapID) or {}) do
+        local x, y = dungeon.position:GetXY()
+        out[#out + 1] = { "dungeon:" .. dungeon.areaPoiID, x, y, dungeon.atlasName, dungeon.name, "Dungeon entrance" }
     end
 end
 
@@ -176,33 +195,25 @@ local function Build()
     if HandyNotes_MapSearchDB.blizzardPins then
         Index.phase = "game pins"
         local faction = UnitFactionGroup("player")
-        local otherFaction = (faction == "Horde" and Enum.FlightPathFaction.Alliance)
-            or (faction == "Alliance" and Enum.FlightPathFaction.Horde) or nil
+        local factions = Enum.FlightPathFaction or {}
+        local otherFaction = (faction == "Horde" and factions.Alliance)
+            or (faction == "Alliance" and factions.Horde) or nil
+        Index.gamePinErrors = 0
         for _, mapID in ipairs(maps) do
             local info = C_Map.GetMapInfo(mapID)
             if info and info.mapType == Enum.UIMapType.Zone then
-                for _, node in ipairs(C_TaxiMap.GetTaxiNodesForMap(mapID) or {}) do
-                    local key = "taxi:" .. node.nodeID
-                    if not seen[key] and node.faction ~= otherFaction then
-                        seen[key] = true
-                        local x, y = node.position:GetXY()
-                        local entry = NewEntry(key, mapID, x, y)
-                        if entry then
-                            entry.atlas, entry.source, entry.sourceLower = node.atlasName, "Flight point", "flight point"
-                            SetLabel(entry, CleanText(node.name))
-                            entries[#entries + 1] = entry
-                        end
-                    end
+                local pins = {}
+                if not pcall(CollectGamePins, mapID, otherFaction, pins) then
+                    Index.gamePinErrors = Index.gamePinErrors + 1
                 end
-                for _, dungeon in ipairs(C_EncounterJournal.GetDungeonEntrancesForMap(mapID) or {}) do
-                    local key = "dungeon:" .. dungeon.areaPoiID
-                    if not seen[key] then
+                for _, pin in ipairs(pins) do
+                    local key, x, y = pin[1], pin[2], pin[3]
+                    if not seen[key] and type(x) == "number" and type(y) == "number" then
                         seen[key] = true
-                        local x, y = dungeon.position:GetXY()
                         local entry = NewEntry(key, mapID, x, y)
                         if entry then
-                            entry.atlas, entry.source, entry.sourceLower = dungeon.atlasName, "Dungeon entrance", "dungeon entrance"
-                            SetLabel(entry, CleanText(dungeon.name))
+                            entry.atlas, entry.source, entry.sourceLower = pin[4], pin[6], pin[6]:lower()
+                            SetLabel(entry, CleanText(pin[5]))
                             entries[#entries + 1] = entry
                         end
                     end
@@ -291,8 +302,13 @@ end
 function Index.Status()
     if not HBD then return "HereBeDragons is missing; HandyNotes did not load." end
     local state = Index.building and ("building (" .. Index.phase .. ")") or (Index.built and "ready" or "not built yet")
-    return ("%s: %d entries, %d plugin pins labelled, %d without a label."):format(
-        state, #Index.entries, Index.labelled, Index.unlabelled)
+    local bySource = {}
+    for _, e in ipairs(Index.entries) do bySource[e.source] = (bySource[e.source] or 0) + 1 end
+    local parts = {}
+    for source, n in pairs(bySource) do parts[#parts + 1] = ("%s %d"):format(tostring(source), n) end
+    table.sort(parts)
+    return ("%s: %d entries (%s); %d plugin pins labelled, %d without a label; %d map(s) where game pins failed."):format(
+        state, #Index.entries, table.concat(parts, ", "), Index.labelled, Index.unlabelled, Index.gamePinErrors or 0)
 end
 
 -- ------------------------------------------------------------------ triggers
