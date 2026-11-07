@@ -1,0 +1,17 @@
+{
+    "$schema":  "https://raw.githubusercontent.com/LuaLS/vscode-lua/master/setting/schema.json",
+    "runtime.version":  "Lua 5.1",
+    "runtime.builtin":  {
+                            "debug":  "disable",
+                            "os":  "disable",
+                            "io":  "disable",
+                            "package":  "disable"
+                        },
+    "workspace.checkThirdParty":  false,
+    "diagnostics.disable":  [
+                                "lowercase-global"
+                            ],
+    "diagnostics.globals":  [
+                                "SlashCmdList"
+                            ]
+}

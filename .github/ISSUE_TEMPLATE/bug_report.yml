@@ -1,0 +1,44 @@
+name: Bug report
+description: Something in HandyNotes - MapSearch went wrong
+labels: ["bug"]
+body:
+  - type: input
+    id: version
+    attributes:
+      label: MapSearch version
+      description: Shown in the in-game AddOns list, or in WowUp / CurseForge.
+      placeholder: "1.0.2"
+    validations:
+      required: true
+  - type: dropdown
+    id: game
+    attributes:
+      label: Game
+      options:
+        - WoW Forever
+        - Retail
+    validations:
+      required: true
+  - type: input
+    id: plugins
+    attributes:
+      label: HandyNotes plugins installed
+      description: For example HandyNotes_MapNotes, HandyNotes_WoWForever, or none.
+  - type: input
+    id: language
+    attributes:
+      label: Game language
+      placeholder: "English"
+  - type: textarea
+    id: what
+    attributes:
+      label: What happened
+      description: What you searched for, what you expected, and what happened instead.
+    validations:
+      required: true
+  - type: textarea
+    id: status
+    attributes:
+      label: /ms status
+      description: Type `/ms status` in game and paste what it prints. Any Lua error text (BugSack) helps too.
+      render: text
