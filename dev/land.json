@@ -1,0 +1,13 @@
+{
+  "branch": "master",
+  "addonsDirs": [
+    "{wow}\\_forever_\\Interface\\AddOns",
+    "{retail}"
+  ],
+  "checks": [
+    { "name": "Test-WowAddon -StrictMethods", "run": ["{ref}\\scripts\\Test-WowAddon.ps1", "{repo}", "-StrictMethods"] },
+    { "name": "Test-WowAddonRuntime", "run": ["{ref}\\scripts\\Test-WowAddonRuntime.ps1", "{repo}", "-Scenario", "{repo}\\tests\\scenario.lua"] },
+    { "name": "locale check", "run": ["{python}", "dev/locale_check.py", "."] },
+    { "name": "locale test", "run": ["C:\\Program Files\\Lua\\5.1\\lua5.1.exe", "dev/test_locale.lua"] }
+  ]
+}
