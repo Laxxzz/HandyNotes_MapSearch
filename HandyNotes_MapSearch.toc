@@ -12,7 +12,7 @@
 ## Notes-zhCN: 世界地图搜索栏：按距离由近到远查找HandyNotes标记、飞行点和地下城入口。
 ## Notes-zhTW: 世界地圖搜尋列：依距離由近到遠尋找HandyNotes標記、飛行點和地城入口。
 ## Author: Laxx
-## Version: 1.0.2
+## Version: 1.0.3
 ## Dependencies: HandyNotes
 ## SavedVariables: HandyNotes_MapSearchDB
 ## IconTexture: Interface\AddOns\HandyNotes_MapSearch\Media\Icon
@@ -35,6 +35,3 @@ Index.lua
 Search.lua
 Pins.xml
 UI.lua
-#@do-not-package@
-tests\InGame.lua
-#@end-do-not-package@
