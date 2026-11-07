@@ -1,0 +1,5 @@
+package-as: HandyNotes_MapSearch
+
+ignore:
+  - tests
+  - .luarc.json
