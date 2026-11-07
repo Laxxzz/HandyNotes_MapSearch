@@ -5,8 +5,10 @@
 local ADDON_NAME, ns = ...
 
 local HBD = LibStub and LibStub("HereBeDragons-2.0", true)
+local Locale = ns.Locale
+local T = Locale.Text
 
-local UI = { matches = {}, selectedIndex = 0 }
+local UI ={ matches = {}, selectedIndex = 0 }
 ns.UI = UI
 
 local PIN_TEMPLATE = "HandyNotesMapSearchPinTemplate"
@@ -96,9 +98,9 @@ local function FormatDistance(r)
     local zone = ns.MapName(r.entry.mapID)
     if r.yards then
         if r.yards >= 1000 then
-            return ("%s  %.1fk yd"):format(zone, r.yards / 1000)
+            return Locale.Format(T["%s  %.1fk yd"], zone, r.yards / 1000)
         end
-        return ("%s  %d yd"):format(zone, r.yards)
+        return Locale.Format(T["%s  %d yd"], zone, r.yards)
     end
     return zone
 end
@@ -182,7 +184,7 @@ local function ShowList()
     local count = math.min(limit, #UI.matches)
     local status
     if count == 0 then
-        status = ns.Index.building and "Indexing map pins..." or "No matches"
+        status = ns.Index.building and T["Indexing map pins..."] or T["No matches"]
     end
     local lines = math.max(count, 1)
 
@@ -282,7 +284,7 @@ local function CreateFrames()
     box:SetAutoFocus(false)
     box:SetAltArrowKeyMode(false)
     box:SetMaxLetters(60)
-    box.Instructions:SetText("Search map pins")
+    box.Instructions:SetText(T["Search map pins"])
 
     box:SetScript("OnTextChanged", function(self)
         SearchBoxTemplate_OnTextChanged(self)

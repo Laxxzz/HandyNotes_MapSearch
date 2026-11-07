@@ -1,6 +1,8 @@
 -- HandyNotes - MapSearch: saved settings, options panel and slash command.
 
 local ADDON_NAME, ns = ...
+local Locale = ns.Locale
+local T = Locale.Text
 
 ns.RESULTS_MIN, ns.RESULTS_MAX = 1, 20
 
@@ -25,8 +27,16 @@ local function ClampResults(n)
     return math.max(ns.RESULTS_MIN, math.min(ns.RESULTS_MAX, n))
 end
 
-function ns.Print(fmt, ...)
-    print("|cff33ff99MapSearch|r: " .. fmt:format(...))
+-- The addon's name and slash commands are never translated.
+function ns.Print(text)
+    print("|cff33ff99MapSearch|r: " .. text)
+end
+
+local function ResultsLine(n)
+    return Locale.Format(Locale.Plural({
+        one = "The list shows %d result.",
+        other = "The list shows %d results.",
+    }), n, n)
 end
 
 -- ------------------------------------------------------------------ options
@@ -37,16 +47,17 @@ local function BuildOptions()
     local category = Settings.RegisterVerticalLayoutCategory("HandyNotes - MapSearch")
 
     local results = Settings.RegisterAddOnSetting(category, "HANDYNOTES_MAPSEARCH_RESULTS", "maxResults", db,
-        Settings.VarType.Number, "Results shown", DEFAULTS.maxResults)
+        Settings.VarType.Number, T["Results shown"], DEFAULTS.maxResults)
     local sliderOptions = Settings.CreateSliderOptions(ns.RESULTS_MIN, ns.RESULTS_MAX, 1)
     sliderOptions:SetLabelFormatter(MinimalSliderWithSteppersMixin.Label.Right)
-    Settings.CreateSlider(category, results, sliderOptions, "How many matches the list under the map search box shows.")
+    Settings.CreateSlider(category, results, sliderOptions, T["How many matches the list under the map search box shows."])
     results:SetValueChangedCallback(function() if ns.UI then ns.UI.Refresh() end end)
     settings.maxResults = results
 
     local blizzard = Settings.RegisterAddOnSetting(category, "HANDYNOTES_MAPSEARCH_BLIZZARD", "blizzardPins", db,
-        Settings.VarType.Boolean, "Search flight points and dungeon entrances", DEFAULTS.blizzardPins)
-    Settings.CreateCheckbox(category, blizzard, "Also list the game's own flight points and dungeon entrances, not only HandyNotes pins.")
+        Settings.VarType.Boolean, T["Search flight points and dungeon entrances"], DEFAULTS.blizzardPins)
+    Settings.CreateCheckbox(category, blizzard,
+        T["Also list the game's own flight points and dungeon entrances, not only HandyNotes pins."])
     blizzard:SetValueChangedCallback(function() ns.Index.MarkDirty() end)
     settings.blizzardPins = blizzard
 
@@ -77,10 +88,10 @@ end)
 
 -- ------------------------------------------------------------------ slash command
 local HELP = {
-    "/mapsearch / ms - open the options",
-    "/mapsearch results <1-20> - how many matches the list shows",
-    "/mapsearch rebuild - re-read every map's pins",
-    "/mapsearch status - index size and progress",
+    { "/mapsearch / ms", T["open the options"] },
+    { "/mapsearch results <1-20>", T["how many matches the list shows"] },
+    { "/mapsearch rebuild", T["re-read every map's pins"] },
+    { "/mapsearch status", T["index size and progress"] },
 }
 
 SLASH_HANDYNOTES_MAPSEARCH1 = "/mapsearch"
@@ -91,19 +102,19 @@ SlashCmdList.HANDYNOTES_MAPSEARCH = function(msg)
         ns.OpenOptions()
     elseif cmd == "results" then
         if tonumber(arg) then
-            ns.Print("the list shows %d results.", ns.SetMaxResults(arg))
+            ns.Print(ResultsLine(ns.SetMaxResults(arg)))
         else
-            ns.Print("the list shows %d results. Use /mapsearch results <%d-%d>.",
-                HandyNotes_MapSearchDB.maxResults, ns.RESULTS_MIN, ns.RESULTS_MAX)
+            ns.Print(ResultsLine(HandyNotes_MapSearchDB.maxResults) .. " "
+                .. Locale.Format(T["Use /mapsearch results <%d-%d>."], ns.RESULTS_MIN, ns.RESULTS_MAX))
         end
     elseif cmd == "rebuild" then
         ns.Index.MarkDirty()
         ns.Index.Start()
-        ns.Print("rebuilding the index.")
+        ns.Print(T["Rebuilding the index."])
     elseif cmd == "status" then
-        ns.Print("%s", ns.Index.Status())
+        ns.Print(ns.Index.Status()) -- a diagnostic: stays English, like SLC's
     else
-        for _, line in ipairs(HELP) do ns.Print("%s", line) end
+        for _, line in ipairs(HELP) do ns.Print(("%s - %s"):format(line[1], line[2])) end
     end
 end
 

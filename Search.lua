@@ -24,7 +24,8 @@ end
 
 local function Terms(text)
     local terms = {}
-    for word in text:lower():gmatch("%S+") do terms[#terms + 1] = word end
+    -- Fold, not string.lower: typed Cyrillic or accented Latin must match labels in any case.
+    for word in ns.Locale.Fold(text):gmatch("%S+") do terms[#terms + 1] = word end
     return terms
 end
 

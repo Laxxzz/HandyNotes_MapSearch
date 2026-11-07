@@ -25,3 +25,4 @@ and on the other continent.
 | 12 | Enter combat (mob or target dummy), open the map, search, choose a result, close the map | No error, no "Interface action blocked"; with `/console taintLog 1`, `Logs\taint.log` names nothing of HandyNotes_MapSearch |
 | 13 | Search "flight" or a flight master's town | Flight points of your faction appear (if "game pins failed" in row 1 is above 0, say so) |
 | 14 | Hover a HandyNotes pin after the index finished | Its tooltip shows normally (the scan left the tooltip alone) |
+| 15 | Optional, needs a non-English game language: switch the text language in the launcher, start the game | The box hint, list rows ("No matches", distances), options panel and `/ms help` are in that language; typing a name in lower case finds it written in upper case |

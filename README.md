@@ -14,6 +14,14 @@ put on the map, plus the game's own flight points and dungeon entrances.
 Requires [HandyNotes](https://www.curseforge.com/wow/addons/handynotes). Made for
 WoW: Forever, and runs on retail (12.1.5) too; one download serves both.
 
+## Languages
+
+English, German, French, Spanish (Spain and Latin America), Italian, Brazilian
+Portuguese, Russian, Korean, and Simplified and Traditional Chinese: every language the
+game client offers. Search ignores upper and lower case in all of them, including
+accented and Cyrillic letters. Pin names come from each plugin in your game language.
+The translations are machine-made drafts; corrections from native speakers are welcome.
+
 ## Settings
 
 `/mapsearch` opens the options (also under Options > AddOns > HandyNotes - MapSearch).

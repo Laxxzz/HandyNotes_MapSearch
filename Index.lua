@@ -6,6 +6,7 @@
 
 local ADDON_NAME, ns = ...
 
+local T, Fold = ns.Locale.Text, ns.Locale.Fold
 local LibStub = LibStub
 local HBD = LibStub and LibStub("HereBeDragons-2.0", true)
 local AceAddon = LibStub and LibStub("AceAddon-3.0", true)
@@ -66,7 +67,7 @@ end
 
 local function SetLabel(entry, label)
     entry.label = label
-    entry.lower = label and label:lower() or entry.sourceLower
+    entry.lower = label and Fold(label) or entry.sourceLower
 end
 
 -- ------------------------------------------------------------------ tooltip label scan
@@ -128,13 +129,13 @@ local function CollectGamePins(mapID, otherFaction, out)
     for _, node in ipairs(GetTaxiNodes and GetTaxiNodes(mapID) or {}) do
         if node.faction ~= otherFaction then
             local x, y = node.position:GetXY()
-            out[#out + 1] = { "taxi:" .. node.nodeID, x, y, node.atlasName, node.name, "Flight point" }
+            out[#out + 1] = { "taxi:" .. node.nodeID, x, y, node.atlasName, node.name, T["Flight point"] }
         end
     end
     local GetEntrances = C_EncounterJournal and C_EncounterJournal.GetDungeonEntrancesForMap
     for _, dungeon in ipairs(GetEntrances and GetEntrances(mapID) or {}) do
         local x, y = dungeon.position:GetXY()
-        out[#out + 1] = { "dungeon:" .. dungeon.areaPoiID, x, y, dungeon.atlasName, dungeon.name, "Dungeon entrance" }
+        out[#out + 1] = { "dungeon:" .. dungeon.areaPoiID, x, y, dungeon.atlasName, dungeon.name, T["Dungeon entrance"] }
     end
 end
 
@@ -164,7 +165,7 @@ local function Build()
         local enabled = HN.db.profile.enabledPlugins
         for pluginName, handler in pairs(HN.plugins) do
             if enabled[pluginName] and type(handler.GetNodes2) == "function" then
-                local sourceLower = tostring(pluginName):lower()
+                local sourceLower = Fold(tostring(pluginName))
                 for _, mapID in ipairs(maps) do
                     local nodes = {}
                     if pcall(CollectNodes, handler, mapID, nodes) then
@@ -212,7 +213,7 @@ local function Build()
                         seen[key] = true
                         local entry = NewEntry(key, mapID, x, y)
                         if entry then
-                            entry.atlas, entry.source, entry.sourceLower = pin[4], pin[6], pin[6]:lower()
+                            entry.atlas, entry.source, entry.sourceLower = pin[4], pin[6], Fold(pin[6])
                             SetLabel(entry, CleanText(pin[5]))
                             entries[#entries + 1] = entry
                         end
