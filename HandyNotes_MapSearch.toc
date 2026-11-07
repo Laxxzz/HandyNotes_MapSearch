@@ -15,7 +15,7 @@
 ## Version: 1.0.2
 ## Dependencies: HandyNotes
 ## SavedVariables: HandyNotes_MapSearchDB
-## IconTexture: Interface\AddOns\HandyNotes_MapSearch\Art\Icon
+## IconTexture: Interface\AddOns\HandyNotes_MapSearch\Media\Icon
 ## AddonCompartmentFunc: HandyNotes_MapSearch_OnCompartmentClick
 ## Category: Map
 
