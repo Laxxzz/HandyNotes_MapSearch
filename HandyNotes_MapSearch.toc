@@ -2,7 +2,7 @@
 ## Title: HandyNotes - MapSearch
 ## Notes: Search bar on the world map: find HandyNotes pins, flight points and dungeon entrances, nearest first.
 ## Author: Laxx
-## Version: 0.1.1
+## Version: 1.0.1
 ## Dependencies: HandyNotes
 ## SavedVariables: HandyNotes_MapSearchDB
 ## IconTexture: Interface\ICONS\INV_Misc_Note_06
