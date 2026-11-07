@@ -44,7 +44,7 @@ local settings = {}
 
 local function BuildOptions()
     local db = HandyNotes_MapSearchDB
-    local category = Settings.RegisterVerticalLayoutCategory("HandyNotes - MapSearch")
+    local category = Settings.RegisterVerticalLayoutCategory("HandyNotes: MapSearch")
 
     local results = Settings.RegisterAddOnSetting(category, "HANDYNOTES_MAPSEARCH_RESULTS", "maxResults", db,
         Settings.VarType.Number, T["Results shown"], DEFAULTS.maxResults)

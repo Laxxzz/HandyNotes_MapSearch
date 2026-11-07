@@ -1,5 +1,5 @@
 ## Interface: 16001, 120105
-## Title: HandyNotes - MapSearch
+## Title: HandyNotes: MapSearch
 ## Notes: Search bar on the world map: find HandyNotes pins, flight points and dungeon entrances, nearest first.
 ## Notes-deDE: Suchleiste auf der Weltkarte: findet HandyNotes-Markierungen, Flugpunkte und Instanzeingänge, die nächsten zuerst.
 ## Notes-esES: Barra de búsqueda en el mapa del mundo: encuentra marcadores de HandyNotes, puntos de vuelo y entradas de mazmorra, los más cercanos primero.
