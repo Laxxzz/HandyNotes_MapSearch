@@ -1,7 +1,26 @@
 {
-  "githubRepo": "Laxxzz/HandyNotes_MapSearch",
-  "githubTarget": "head",
-  "targets": ["github"],
-  "requiredEntries": ["Core.lua", "Index.lua", "Search.lua", "UI.lua", "Pins.xml"],
-  "forbiddenEntries": ["dev/", "docs/", "tests/", "CLAUDE\\.md$"]
+    "githubRepo":  "Laxxzz/HandyNotes_MapSearch",
+    "targets":  [
+                    "mirror",
+                    "github"
+                ],
+    "mirror":  {
+                   "url":  "https://github.com/Laxxzz/HandyNotes_MapSearch.git",
+                   "replaceText":  [
+                                       "{home_json}\\\\Documents\\\\Development\\\\Codebases\\\\WowAddons\\\\WoW-Addon-API-Ref\\\\vendor\\\\luals==>../WoW-Addon-API-Ref/vendor/luals"
+                                   ]
+               },
+    "requiredEntries":  [
+                            "Core.lua",
+                            "Index.lua",
+                            "Search.lua",
+                            "UI.lua",
+                            "Pins.xml"
+                        ],
+    "forbiddenEntries":  [
+                             "dev/",
+                             "docs/",
+                             "tests/",
+                             "CLAUDE\\.md$"
+                         ]
 }
