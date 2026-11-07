@@ -7,6 +7,9 @@
                             "io":  "disable",
                             "package":  "disable"
                         },
+    "workspace.library":  [
+                              "../WoW-Addon-API-Ref/vendor/luals"
+                          ],
     "workspace.checkThirdParty":  false,
     "diagnostics.disable":  [
                                 "lowercase-global"
