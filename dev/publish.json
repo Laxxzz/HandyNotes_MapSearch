@@ -2,7 +2,10 @@
     "githubRepo":  "Laxxzz/HandyNotes_MapSearch",
     "targets":  [
                     "mirror",
-                    "github"
+                    "github",
+                    "wago",
+                    "curse",
+                    "wowi"
                 ],
     "mirror":  {
                    "url":  "https://github.com/Laxxzz/HandyNotes_MapSearch.git",
