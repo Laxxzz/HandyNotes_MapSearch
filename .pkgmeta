@@ -2,4 +2,7 @@ package-as: HandyNotes_MapSearch
 
 ignore:
   - tests
+  - dev
+  - docs
+  - CLAUDE.md
   - .luarc.json

@@ -1,0 +1,7 @@
+{
+  "githubRepo": "Laxxzz/HandyNotes_MapSearch",
+  "githubTarget": "head",
+  "targets": ["github"],
+  "requiredEntries": ["Core.lua", "Index.lua", "Search.lua", "UI.lua", "Pins.xml"],
+  "forbiddenEntries": ["dev/", "docs/", "tests/", "CLAUDE\\.md$"]
+}
