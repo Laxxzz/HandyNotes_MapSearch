@@ -8,4 +8,7 @@ H.expect(H.env.HandyNotes_MapSearchDB.maxResults == 20, "/mapsearch results clam
 H.slash("/mapsearch results 0")
 H.expect(H.env.HandyNotes_MapSearchDB.maxResults == 1, "/mapsearch results clamps to 1")
 H.slash("/mapsearch status")
+-- Not covered here: a secret tooltip line in the label scan. The harness has no HandyNotes or
+-- HereBeDragons, so Index.lua builds nothing in it, and a scenario cannot reach the addon's
+-- namespace. dev/test_index.lua fakes the plugin and the secret instead (see docs/testing.md).
 H.slash("/mapsearch")

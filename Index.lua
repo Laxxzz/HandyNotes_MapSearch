@@ -19,6 +19,7 @@ local Index = {
     phase = "idle",
     labelled = 0,
     unlabelled = 0,
+    secretLabels = 0, -- pins left unlabelled because their label text was a secret value
 }
 ns.Index = Index
 
@@ -44,8 +45,12 @@ function ns.MapName(mapID)
 end
 
 -- Strip colour, texture and atlas escapes so labels compare and display as plain text.
+-- Returns nil for "no label", and nil, true when the text is a secret value: on retail 12.x a
+-- tooltip line a plugin filled from a secret source (a unit or item name) reads back as a secret
+-- string, which type() still calls "string" but which addon code can neither index nor compare.
 local function CleanText(s)
     if type(s) ~= "string" then return nil end
+    if issecretvalue and issecretvalue(s) then return nil, true end -- Forever has no issecretvalue
     s = s:gsub("|c%x%x%x%x%x%x%x%x", ""):gsub("|cn[^:]*:", ""):gsub("|r", "")
     s = s:gsub("|T.-|t", ""):gsub("|A.-|a", ""):gsub("|n", " ")
     s = strtrim(s)
@@ -99,15 +104,15 @@ local function ScanLabel(entry)
     local owner = ScanOwner()
     owner.pluginName, owner.coord, owner.uiMapID = entry.plugin, entry.coord, entry.mapID
     GameTooltip:ClearLines()
-    local label
+    local label, secret
     if pcall(handler.OnEnter, owner, entry.mapID, entry.coord) and GameTooltip:NumLines() > 0 then
-        label = CleanText(GameTooltipTextLeft1:GetText())
+        label, secret = CleanText(GameTooltipTextLeft1:GetText())
     end
     if type(handler.OnLeave) == "function" then
         pcall(handler.OnLeave, owner, entry.mapID, entry.coord)
     end
     GameTooltip:Hide()
-    return label
+    return label, secret
 end
 
 -- A scan borrows GameTooltip, so it waits while the player is looking at a tooltip or fighting.
@@ -155,7 +160,7 @@ local function Build()
     end
 
     local entries, seen = {}, {}
-    Index.entries, Index.labelled, Index.unlabelled = entries, 0, 0
+    Index.entries, Index.labelled, Index.unlabelled, Index.secretLabels = entries, 0, 0, 0
     local maps = SortedMaps()
     local HN = HandyNotesAddon()
 
@@ -214,7 +219,9 @@ local function Build()
                         local entry = NewEntry(key, mapID, x, y)
                         if entry then
                             entry.atlas, entry.source, entry.sourceLower = pin[4], pin[6], Fold(pin[6])
-                            SetLabel(entry, CleanText(pin[5]))
+                            local label, secret = CleanText(pin[5])
+                            entry.secret = secret
+                            SetLabel(entry, label)
                             entries[#entries + 1] = entry
                         end
                     end
@@ -234,7 +241,10 @@ local function Build()
                 started = debugprofilestop()
             end
             labelTries[entry.key] = (labelTries[entry.key] or 0) + 1
-            local label = ScanLabel(entry)
+            -- A secret result is no label, and it still uses up its try: the scan is bounded,
+            -- and a rebuild does not borrow the tooltip again for a pin that cannot be read.
+            local label, secret = ScanLabel(entry)
+            entry.secret = secret
             if label then
                 labelCache[entry.key] = label
                 SetLabel(entry, label)
@@ -245,6 +255,7 @@ local function Build()
             Index.labelled = Index.labelled + 1
         else
             Index.unlabelled = Index.unlabelled + 1
+            if entry.secret then Index.secretLabels = Index.secretLabels + 1 end
         end
     end
     Index.phase = "done"
@@ -308,8 +319,9 @@ function Index.Status()
     local parts = {}
     for source, n in pairs(bySource) do parts[#parts + 1] = ("%s %d"):format(tostring(source), n) end
     table.sort(parts)
-    return ("%s: %d entries (%s); %d plugin pins labelled, %d without a label; %d map(s) where game pins failed."):format(
-        state, #Index.entries, table.concat(parts, ", "), Index.labelled, Index.unlabelled, Index.gamePinErrors or 0)
+    return ("%s: %d entries (%s); %d plugin pins labelled, %d without a label (%d of them secret text); %d map(s) where game pins failed."):format(
+        state, #Index.entries, table.concat(parts, ", "), Index.labelled, Index.unlabelled,
+        Index.secretLabels, Index.gamePinErrors or 0)
 end
 
 -- ------------------------------------------------------------------ triggers

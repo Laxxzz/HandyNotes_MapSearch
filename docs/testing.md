@@ -3,6 +3,10 @@
 Run every row on **WoW: Forever first**, then retail. `/console scriptErrors 1` first.
 Each row is PASS or FAIL per client.
 
+Offline first: `lua5.1 dev/test_index.lua` (from the worktree root) builds the index against a fake
+plugin whose tooltip line and `GetMapSearchLabel` return a secret, and expects no error. The harness
+scenario cannot do this (no HandyNotes there).
+
 Setup: on Forever, HandyNotes_WoWForever and HandyNotes_MapNotes already put pins on the
 map (treasures, dungeon entrances, boats and zeppelins). On retail, or for an extra test,
 HandyNotes' own notes work: open the map, Alt+right-click a spot, give the note a title
@@ -26,3 +30,4 @@ and on the other continent.
 | 13 | Search "flight" or a flight master's town | Flight points of your faction appear (if "game pins failed" in row 1 is above 0, say so) |
 | 14 | Hover a HandyNotes pin after the index finished | Its tooltip shows normally (the scan left the tooltip alone) |
 | 15 | Optional, needs a non-English game language: switch the text language in the launcher, start the game | The box hint, list rows ("No matches", distances), options panel and `/ms help` are in that language; typing a name in lower case finds it written in upper case |
+| 16 | Retail only: `/reload`, wait 15 s, `/mapsearch status` | "ready", no `Index.lua` error in BugSack or `/console scriptErrors 1`; "N without a label (M of them secret text)" - M may be 0 |

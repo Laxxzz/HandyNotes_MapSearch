@@ -12,6 +12,15 @@ and `ClearLines()` first; any line afterwards is the plugin's. Never test `IsOwn
 HandyNotes_WoWForever anchors on `WorldMapFrame.ScrollContainer` and MapNotes may return
 before `SetOwner`. A plugin may instead define `handler:GetMapSearchLabel(uiMapID, coord)`.
 
+On retail 12.x `GameTooltipTextLeft1:GetText()` (`SimpleFontStringAPI.GetText`,
+`SecretReturnsForAspect = Text`) returns a secret string when a plugin filled the line from a
+secret source, and `type()` still calls it `"string"`. `CleanText` therefore checks
+`issecretvalue` (absent on Forever, so guarded) before any `gsub` or comparison and returns
+`nil, true`: the pin has no label (search falls back to its source name), counts in
+`Index.secretLabels` (`/mapsearch status`), and still uses up one of its `MAX_LABEL_TRIES`, so
+rebuilds do not borrow the tooltip again for it. Never index, compare or `Fold` a label before
+`CleanText` has accepted it.
+
 ## 2. Flight points and dungeon entrances are optional sources
 
 They are existence-checked and read in `pcall` per map (Forever has no reference); failures
